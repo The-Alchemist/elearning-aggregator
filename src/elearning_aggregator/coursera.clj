@@ -1,0 +1,109 @@
+(ns elearning-aggregator.coursera
+  (:require [cheshire.core :refer :all]
+            [clojure.string :as str]))
+
+
+(def coursera-url "https://api.coursera.org/api/catalog.v1/")
+
+(defn get-mapping [type]
+  (cond
+    (= type "courses") {:id :courseraCourseId}
+    (= type "categories") {:id :courseraCategoryId}
+    (= type "universities") {:id :courseraUniversityId}
+    (= type "instructors") {:id :courseraInstructorId}
+    :else (throw (IllegalArgumentException. (str "invalid type: " type)))))
+
+(defn get-field-listing [type]
+  (cond
+    (= type "courses")
+		  [
+		  "language" 
+			"largeIcon" 
+			"photo" 
+			"previewLink" 
+			"shortDescription" 
+			"smallIcon" 
+			"smallIconHover" 
+			"subtitleLanguagesCsv" 
+			"isTranslate" 
+			"universityLogo" 
+			"universityLogoSt" 
+			"video" 
+			"videoId" 
+			"aboutTheCourse" 
+			"targetAudience" "faq" 
+			"courseSyllabus" 
+			"courseFormat" 
+			"suggestedReadings" 
+			"instructor" 
+			"estimatedClassWorkload" 
+			"aboutTheInstructor" 
+			"recommendedBackground"
+			]
+    (= type "categories")
+      ["description"]
+    (= type "universities")
+			["name" 
+			"shortName" 
+			"description" 
+			"banner" 
+			"homeLink" 
+			"location" 
+			"locationCity" 
+			"locationState" 
+			"locationCountry" 
+			"locationLat" 
+			"locationLng" 
+			"classLogo" 
+			"website" 
+			"websiteTwitter" 
+			"websiteFacebook" 
+			"websiteYoutube" 
+			"logo" 
+			"squareLogo" 
+			"landingPageBanner"]
+   (= type "instructors")
+     ["photo" 
+			"photo150" 
+			"bio" 
+			"prefixName" 
+			"firstName" 
+			"middleName" 
+			"lastName" 
+			"suffixName" 
+			"fullName" 
+			"title" 
+			"department" 
+			"website" 
+			"websiteTwitter" 
+			"websiteFacebook" 
+			"websiteLinkedin" 
+			"websiteGplus" 
+			"shortName"]
+    :else
+      (throw (IllegalArgumentException. (str "invalid type: " type)))))
+
+(defn make-url [url type fields]
+  "Creates a URL by joining the fields with a comma and adding that to a URL"
+  (if (empty? fields)
+    (str url type)
+	  (str url type "?fields=" (clojure.string/join "," fields) )))
+
+(defn get-data
+  ([type]
+    (get-data type (get-field-listing type)))
+  ([type fields]
+    ((parse-string (slurp (make-url coursera-url type fields)) true) :elements)))
+
+(defn map-without-empty-values [m]
+  (into {}
+    (for [ [k v] m :when (not (empty? v))] [ k v ] )))
+
+(defn clean-data [data type]
+  (def data (for [ u data] (dissoc u :links)))
+  (def data (for [ u data] (clojure.set/rename-keys u (get-mapping type))))
+  (for [ u data] (map-without-empty-values u)))
+
+;(def category-data (get-data "categories"))
+;(def universities (for [ u universities] (dissoc u :links)))
+;(def universities (for [ u universities] (clojure.set/rename-keys u (get-mapping "universities"))))
