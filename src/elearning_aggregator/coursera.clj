@@ -31,7 +31,8 @@
 			"video" 
 			"videoId" 
 			"aboutTheCourse" 
-			"targetAudience" "faq" 
+			"targetAudience"
+      "faq" 
 			"courseSyllabus" 
 			"courseFormat" 
 			"suggestedReadings" 
@@ -83,11 +84,15 @@
     :else
       (throw (IllegalArgumentException. (str "invalid type: " type)))))
 
-(defn make-url [url type fields]
+(defn make-url
   "Creates a URL by joining the fields with a comma and adding that to a URL"
-  (if (empty? fields)
-    (str url type)
-	  (str url type "?fields=" (clojure.string/join "," fields) )))
+  ([url type] 
+    (make-url url type []))
+  ([url type fields]
+	  (if (empty? fields)
+	    (str url type)
+		  (str url type "?fields=" (clojure.string/join "," fields) ))))
+  
 
 (defn get-data
   ([type]
@@ -100,9 +105,10 @@
     (for [ [k v] m :when (not (empty? v))] [ k v ] )))
 
 (defn clean-data [data type]
-  (def data (for [ u data] (dissoc u :links)))
-  (def data (for [ u data] (clojure.set/rename-keys u (get-mapping type))))
-  (for [ u data] (map-without-empty-values u)))
+  (def data1 (for [ u data ] (dissoc u :links)))
+  (def data2 (for [ u data1 ] (clojure.set/rename-keys u (get-mapping type))))
+  (def data3 (for [ u data2 ] (map-without-empty-values u)))
+  data3)
 
 ;(def category-data (get-data "categories"))
 ;(def universities (for [ u universities] (dissoc u :links)))

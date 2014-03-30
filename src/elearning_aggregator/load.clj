@@ -19,7 +19,7 @@
 ; Institution
 (declare Institution)
 (defentity Institution)
-; Instrucotr
+; Instructor
 (declare Instructor)
 (defentity Instructor)
 
