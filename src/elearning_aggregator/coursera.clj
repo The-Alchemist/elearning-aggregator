@@ -102,7 +102,8 @@
 
 (defn map-without-empty-values [m]
   (into {}
-    (for [ [k v] m :when (not (empty? v))] [ k v ] )))
+    ; note: v could be a string or int (e.g., "abc" or 123), so empty? by itself doesn't work
+    (for [ [k v] m :when (not= v "") ] [ k v ] )))
 
 (defn clean-data [data type]
   (def data1 (for [ u data ] (dissoc u :links)))
