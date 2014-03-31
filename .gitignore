@@ -12,3 +12,5 @@ pom.xml.asc
 /bin
 /.classpath
 /.project
+/.settings
+/.nrepl-port
