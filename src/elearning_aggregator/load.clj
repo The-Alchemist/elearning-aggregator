@@ -22,4 +22,10 @@
 ; Instructor
 (declare Instructor)
 (defentity Instructor)
+; Course
+(declare Course)
+(defentity Course)
 
+; Session
+(declare Session)
+(defentity Session)

@@ -11,6 +11,7 @@
     (= type "categories") {:id :courseraCategoryId}
     (= type "universities") {:id :courseraUniversityId}
     (= type "instructors") {:id :courseraInstructorId}
+    (= type "sessions") {:id :courseraSessionId, :courseId :courseraCourseId}
     :else (throw (IllegalArgumentException. (str "invalid type: " type)))))
 
 (defn get-field-listing [type]
@@ -81,6 +82,24 @@
 			"websiteLinkedin" 
 			"websiteGplus" 
 			"shortName"]
+    (= type "sessions")
+			["id" 
+			"courseId" 
+			"homeLink" 
+			"status" 
+			"active" 
+			"durationString" "startDay" 
+			"startMonth" 
+			"startYear" 
+			"name" 
+			"signatureTrackCloseTime" 
+			"signatureTrackOpenTime" 
+			"signatureTrackPrice" 
+			"signatureTrackRegularPrice" 
+			"eligibleForCertificates" 
+			"eligibleForSignatureTrack" 
+			"certificateDescription" 
+			"certificatesReady"]
     :else
       (throw (IllegalArgumentException. (str "invalid type: " type)))))
 
