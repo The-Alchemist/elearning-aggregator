@@ -9,5 +9,5 @@
                  [korma "0.3.0"]
                  [org.clojure/java.jdbc "0.3.3"]
                  [mysql/mysql-connector-java "5.1.30"]
-                 [clojurewerkz/propertied "1.1.0"]
+                 [clojurewerkz/propertied "1.2.0"]
                  ])
