@@ -1,18 +1,10 @@
 (ns elearning-aggregator.coursera
   (:require [cheshire.core :refer :all]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [elearning-aggregator.common :refer :all]))
 
 
 (def coursera-url "https://api.coursera.org/api/catalog.v1/")
-
-(defn get-mapping [type]
-  (cond
-    (= type "courses") {:id :courseraCourseId}
-    (= type "categories") {:id :courseraCategoryId}
-    (= type "universities") {:id :courseraUniversityId}
-    (= type "instructors") {:id :courseraInstructorId}
-    (= type "sessions") {:id :courseraSessionId, :courseId :courseraCourseId}
-    :else (throw (IllegalArgumentException. (str "invalid type: " type)))))
 
 (defn get-field-listing [type]
   (cond
@@ -102,6 +94,16 @@
 			"certificatesReady"]
     :else
       (throw (IllegalArgumentException. (str "invalid type: " type)))))
+
+
+(defn get-coursera-mapping [type]
+  (cond
+    (= type "courses") {:id :courseraCourseId}
+    (= type "categories") {:id :courseraCategoryId}
+    (= type "universities") {:id :courseraUniversityId}
+    (= type "instructors") {:id :courseraInstructorId}
+    (= type "sessions") {:id :courseraSessionId, :courseId :courseraCourseId}
+    :else (throw (IllegalArgumentException. (str "invalid type: " type)))))
 
 (defn make-url
   "Creates a URL by joining the fields with a comma and adding that to a URL"
